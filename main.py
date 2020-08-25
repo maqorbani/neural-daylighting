@@ -30,9 +30,8 @@ from deep_light.random_selection_threeInputs import select_test_samples
 from deep_light.genData import get_data_path, set_data_path
 
 
-def main():
-
-    data_root='./ALL_DATA_FP16'
+def main(data_root):
+    
     kwargs = {'data_root': data_root,
               'RETRAIN': False,
               'LOSS_FUNCTION_TYPE': relative_err,
@@ -46,7 +45,6 @@ def main():
               'LONGITUDE': 122,
               'SM': 120}
 
-    
     select_test_samples(data_root)
     generate_train_val_data(**kwargs)
     train_model(**kwargs)
@@ -54,4 +52,19 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    if os.path.exists('./ALL_DATA_FP64'):
+        print("64-bit data directory found!")
+        data_root = './ALL_DATA_FP64'
+    if os.path.exists('./ALL_DATA_FP32'):
+        print("32-bit data directory found!")
+        data_root = './ALL_DATA_FP32'
+    if os.path.exists('./ALL_DATA_FP16'):
+        print("32-bit data directory found!",
+        "The 16bit format potentially loses some data.")
+    else:
+        print("No data folder found in the root directory of the Neural_daylighting.")
+    
+    assert data_root != None
+
+    main(data_root)
